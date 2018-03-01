@@ -18,6 +18,7 @@ class App < Sinatra::Base
     accounts.to_json
   end
 
+<<<<<<< HEAD
   get '/balance' do
     id = params.fetch("GUID")
     response = RestClient.get('https://mvf-devtest-s3api.s3-eu-west-1.amazonaws.com/a4a06bb0-3fbe-40bd-9db2-f68354ba742f.json')
@@ -25,5 +26,9 @@ class App < Sinatra::Base
     user = json["accounts"].find {|h1| h1['id']== id}
     @balance = user["balance"]
     erb(:balance)
+=======
+  get '/accounts/:balance' do
+    
+>>>>>>> f91253da004909f699658bb25ee510cca70f139b
   end
 end

@@ -38,4 +38,18 @@ class App < Sinatra::Base
     @phone = user["telephone"]
     erb(:details)
   end
+
+  get '/debts' do
+    @indebt = []
+    response = RestClient.get('https://mvf-devtest-s3api.s3-eu-west-1.amazonaws.com/a4a06bb0-3fbe-40bd-9db2-f68354ba742f.json')
+    json = JSON.parse(response)
+    users = json["accounts"]
+    users.each do |user|
+      if user["balance"].to_i < 0
+        @indebt << user["id"]
+      end
+    end
+    erb(:debts)
+  end
+
 end

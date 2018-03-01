@@ -6,7 +6,6 @@ require 'pry'
 class App < Sinatra::Base
 
   get '/' do
-    "I need to put a form here that you put in your user ID and a button puts that user ID into the id field in the test case and a button takes you to /balance"
     erb(:home)
   end
 
@@ -16,6 +15,10 @@ class App < Sinatra::Base
 
   get '/details-form' do
     erb(:details_form)
+  end
+
+  get '/contact-form' do
+    erb(:contact_form)
   end
 
   get '/balance' do
@@ -52,4 +55,17 @@ class App < Sinatra::Base
     erb(:debts)
   end
 
+  get '/contact_info' do
+    id = params.fetch("GUID")
+    response = RestClient.get('https://mvf-devtest-s3api.s3-eu-west-1.amazonaws.com/a4a06bb0-3fbe-40bd-9db2-f68354ba742f.json')
+    json = JSON.parse(response)
+    users = json["accounts"]
+    user = json["accounts"].find {|h1| h1['id']== id}
+    @firstname = user["firstname"]
+    @lastname = user["lastname"]
+    @email = user["email"]
+    @phone = user["telephone"]
+    @balance = user["balance"]
+    erb(:contact)
+  end
 end

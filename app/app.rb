@@ -15,12 +15,10 @@ class App < Sinatra::Base
     json = JSON.parse(response)
     accounts = json["accounts"]
     accounts.to_json
-
   end
 
-  get '/example' do
-    content_type :json
-    { :key1 => 'value1', :key2 => 'value2' }.to_json
+  get '/accounts/:balance' do
+    
   end
 
 end

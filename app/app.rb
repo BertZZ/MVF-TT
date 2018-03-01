@@ -1,12 +1,13 @@
 require 'sinatra/base'
 require 'rest-client'
 require 'json'
-
+require 'pry'
 
 class App < Sinatra::Base
 
   get '/' do
-    "Project set up Basics are working"
+    "I need to put a form here that you put in your user ID and a button puts that user ID into the id field in the test case and a button takes you to /balance"
+    erb(:home)
   end
 
   get '/accounts' do
@@ -15,12 +16,14 @@ class App < Sinatra::Base
     json = JSON.parse(response)
     accounts = json["accounts"]
     accounts.to_json
-
   end
 
-  get '/example' do
-    content_type :json
-    { :key1 => 'value1', :key2 => 'value2' }.to_json
+  get '/balance' do
+    id = params.fetch("GUID")
+    response = RestClient.get('https://mvf-devtest-s3api.s3-eu-west-1.amazonaws.com/a4a06bb0-3fbe-40bd-9db2-f68354ba742f.json')
+    json = JSON.parse(response)
+    user = json["accounts"].find {|h1| h1['id']== id}
+    @balance = user["balance"]
+    erb(:balance)
   end
-
 end

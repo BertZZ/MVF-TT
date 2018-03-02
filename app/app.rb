@@ -30,6 +30,10 @@ class App < Sinatra::Base
     erb(:name_form)
   end
 
+  get '/debt-form' do
+    erb(:debt_form)
+  end
+
   get '/balance' do
     id = params.fetch("GUID")
     output = get_json
@@ -50,15 +54,20 @@ class App < Sinatra::Base
   end
 
   get '/debts' do
-    @indebt = []
-    output = get_json
-    users = output["accounts"]
-    users.each do |user|
-      if user["balance"].to_i < 0
-        @indebt << user["id"]
+    guid = params.fetch("GUID")
+    if guid == "a4a06bb0-3fbe-40bd-9db2-f68354ba742f"
+      @indebt = []
+      output = get_json
+      users = output["accounts"]
+      users.each do |user|
+        if user["balance"].to_i < 0
+          @indebt << user["id"]
+        end
       end
+      erb(:debts)
+    else
+      erb(:error)
     end
-    erb(:debts)
   end
 
   get '/contact_info_ID' do

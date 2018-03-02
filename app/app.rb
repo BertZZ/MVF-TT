@@ -5,6 +5,11 @@ require 'pry'
 
 class App < Sinatra::Base
 
+  def get_json
+    response = RestClient.get('https://mvf-devtest-s3api.s3-eu-west-1.amazonaws.com/a4a06bb0-3fbe-40bd-9db2-f68354ba742f.json')
+    json = JSON.parse(response)
+  end
+
   get '/' do
     erb(:home)
   end
@@ -23,18 +28,16 @@ class App < Sinatra::Base
 
   get '/balance' do
     id = params.fetch("GUID")
-    response = RestClient.get('https://mvf-devtest-s3api.s3-eu-west-1.amazonaws.com/a4a06bb0-3fbe-40bd-9db2-f68354ba742f.json')
-    json = JSON.parse(response)
-    user = json["accounts"].find {|h1| h1['id']== id}
+    output = get_json
+    user = output["accounts"].find {|h1| h1['id']== id}
     @balance = user["balance"]
     erb(:balance)
   end
 
   get '/details' do
     id = params.fetch("GUID")
-    response = RestClient.get('https://mvf-devtest-s3api.s3-eu-west-1.amazonaws.com/a4a06bb0-3fbe-40bd-9db2-f68354ba742f.json')
-    json = JSON.parse(response)
-    user = json["accounts"].find {|h1| h1['id']== id}
+    output = get_json
+    user = output["accounts"].find {|h1| h1['id']== id}
     @firstname = user["firstname"]
     @lastname = user["lastname"]
     @email = user["email"]
@@ -44,9 +47,8 @@ class App < Sinatra::Base
 
   get '/debts' do
     @indebt = []
-    response = RestClient.get('https://mvf-devtest-s3api.s3-eu-west-1.amazonaws.com/a4a06bb0-3fbe-40bd-9db2-f68354ba742f.json')
-    json = JSON.parse(response)
-    users = json["accounts"]
+    output = get_json
+    users = output["accounts"]
     users.each do |user|
       if user["balance"].to_i < 0
         @indebt << user["id"]
@@ -57,10 +59,8 @@ class App < Sinatra::Base
 
   get '/contact_info' do
     id = params.fetch("GUID")
-    response = RestClient.get('https://mvf-devtest-s3api.s3-eu-west-1.amazonaws.com/a4a06bb0-3fbe-40bd-9db2-f68354ba742f.json')
-    json = JSON.parse(response)
-    users = json["accounts"]
-    user = json["accounts"].find {|h1| h1['id']== id}
+    output = get_json
+    user = output["accounts"].find {|h1| h1['id']== id}
     @firstname = user["firstname"]
     @lastname = user["lastname"]
     @email = user["email"]

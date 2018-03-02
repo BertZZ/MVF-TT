@@ -26,10 +26,14 @@ class App < Sinatra::Base
     erb(:contact_form)
   end
 
+  get '/name-form' do
+    erb(:name_form)
+  end
+
   get '/balance' do
     id = params.fetch("GUID")
     output = get_json
-    user = output["accounts"].find {|h1| h1['id']== id}
+    user = output["accounts"].find {|record| record['id']== id}
     @balance = user["balance"]
     erb(:balance)
   end
@@ -37,7 +41,7 @@ class App < Sinatra::Base
   get '/details' do
     id = params.fetch("GUID")
     output = get_json
-    user = output["accounts"].find {|h1| h1['id']== id}
+    user = output["accounts"].find {|record| record['id']== id}
     @firstname = user["firstname"]
     @lastname = user["lastname"]
     @email = user["email"]
@@ -57,15 +61,33 @@ class App < Sinatra::Base
     erb(:debts)
   end
 
-  get '/contact_info' do
+  get '/contact_info_ID' do
     id = params.fetch("GUID")
     output = get_json
-    user = output["accounts"].find {|h1| h1['id']== id}
+    user = output["accounts"].find {|record| record['id']== id}
     @firstname = user["firstname"]
     @lastname = user["lastname"]
     @email = user["email"]
     @phone = user["telephone"]
     @balance = user["balance"]
     erb(:contact)
+  end
+
+  get '/ID' do
+    @ids = []
+    firstname = params.fetch("firstname")
+    lastname = params.fetch("lastname")
+    output = get_json
+    users = output["accounts"]
+    users.each do |user|
+      if user["lastname"] == lastname && user["firstname"] == firstname
+        @ids << user["id"]
+      elsif  (user["lastname"] == lastname) && firstname == ""
+        @ids << user["id"]
+      elsif user["firstname"] == firstname && lastname == ""
+        @ids << user["id"]
+      end
+    end
+    erb(:id)
   end
 end

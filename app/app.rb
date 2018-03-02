@@ -38,19 +38,27 @@ class App < Sinatra::Base
     id = params.fetch("GUID")
     output = get_json
     user = output["accounts"].find {|record| record['id']== id}
-    @balance = user["balance"]
-    erb(:balance)
+    if user == nil
+      erb(:error)
+    else
+      @balance = user["balance"]
+      erb(:balance)
+    end
   end
 
   get '/details' do
     id = params.fetch("GUID")
     output = get_json
     user = output["accounts"].find {|record| record['id']== id}
-    @firstname = user["firstname"]
-    @lastname = user["lastname"]
-    @email = user["email"]
-    @phone = user["telephone"]
-    erb(:details)
+    if user == nil
+      erb(:error)
+    else
+      @firstname = user["firstname"]
+      @lastname = user["lastname"]
+      @email = user["email"]
+      @phone = user["telephone"]
+      erb(:details)
+    end
   end
 
   get '/debts' do
@@ -74,12 +82,16 @@ class App < Sinatra::Base
     id = params.fetch("GUID")
     output = get_json
     user = output["accounts"].find {|record| record['id']== id}
-    @firstname = user["firstname"]
-    @lastname = user["lastname"]
-    @email = user["email"]
-    @phone = user["telephone"]
-    @balance = user["balance"]
-    erb(:contact)
+    if user == nil
+      erb(:error)
+    else
+      @firstname = user["firstname"]
+      @lastname = user["lastname"]
+      @email = user["email"]
+      @phone = user["telephone"]
+      @balance = user["balance"]
+      erb(:contact)
+    end
   end
 
   get '/ID' do
@@ -97,6 +109,10 @@ class App < Sinatra::Base
         @ids << user["id"]
       end
     end
-    erb(:id)
+    if @ids == []
+      erb(:error)
+    else
+      erb(:id)
+    end
   end
 end

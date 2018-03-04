@@ -1,7 +1,6 @@
 require 'sinatra/base'
 require 'rest-client'
 require 'json'
-require 'pry'
 
 class App < Sinatra::Base
 
